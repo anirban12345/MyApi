@@ -42,7 +42,9 @@ class SearchApi extends CI_Controller
             //$uploadPath = '../../../home/ddsw/Anirban/document_scan/';
             $uploadPath = './uploadfiles/'; 
             $filename= $_FILES["userfile"]["name"];
-            $file_ext = pathinfo($filename,PATHINFO_EXTENSION);
+            
+			//$file_ext = pathinfo($filename,PATHINFO_EXTENSION);
+			$file_ext = ".JPG";
             $config['file_name'] = time().'.'.$file_ext;
             $config['allowed_types']= 'gif|jpg|png';
             $config['upload_path'] = $uploadPath; 
@@ -73,8 +75,7 @@ class SearchApi extends CI_Controller
 	public function get_all_files()
 	{
 		$dir_name = "uploadfiles/";		
-		$images = glob($dir_name."*.jpg");		
-		
+		$images = glob($dir_name."*.JPG");				
 		$imgarr=array();
 		$i=0;
 		foreach($images as $image) 
