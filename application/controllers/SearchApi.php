@@ -32,45 +32,7 @@ class SearchApi extends CI_Controller
 		 print_r($data);
 	 }
 
-	public function upload()
-    {
-		//$data=$this->input->post();
-		//print_r($data); 
-
-		if(!empty($_FILES)){ 
-            // File upload configuration 
-            //$uploadPath = '../../../home/ddsw/Anirban/document_scan/';
-            $uploadPath = './uploadfiles/'; 
-            $filename= $_FILES["userfile"]["name"];
-            
-			//$file_ext = pathinfo($filename,PATHINFO_EXTENSION);
-			$file_ext = ".JPG";
-            $config['file_name'] = time().'.'.$file_ext;
-            $config['allowed_types']= 'gif|jpg|png';
-            $config['upload_path'] = $uploadPath; 
-            //$config['allowed_types'] = '*'; 
-            // Load and initialize upload library 
-            $this->load->library('upload', $config); 
-            $this->upload->initialize($config); 
-            //print_r($config);
-            //print_r(getcwd());
-            // Upload file to the server
-
-            
-            if($this->upload->do_upload('userfile')){ 
-                $fileData = $this->upload->data(); 
-                //$uploadData['file_name'] = $fileData['file_name']; 
-                //$uploadData['uploaded_on'] = date("Y-m-d H:i:s");                                 
-                $data='Image Successfully Added';
-				print_r($data);                
-            }
-            else
-            {
-                $error = $this->upload->display_errors();
-				print_r($error);                                
-            }                         
-        }
-    }
+	
 
 	public function get_all_files()
 	{
