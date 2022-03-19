@@ -13,6 +13,7 @@ class PSApi extends REST_Controller
 	public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Kolkata');
         $this->load->model('Mailmodel');
         $this->load->model('Sectionmodel');        
         //$this->permission=unserialize($this->session->userdata('userdtls')[0]->ug_permission);
@@ -33,9 +34,38 @@ class PSApi extends REST_Controller
      
     public function index_post()
     {   
-        $data = $this->input->post();        
-        $this->Globalmodel->savedata('pstation',$data);
-        $this->response(['PS created successfully.'], REST_Controller::HTTP_OK);        
+        if(!empty($_FILES)){ 
+            // File upload configuration 
+            //$uploadPath = '../../../home/ddsw/Anirban/document_scan/';
+            $uploadPath = './uploadfiles/'; 
+            $filename= $_FILES["userfile"]["name"];
+			$file_ext = ".JPG";
+            $config['file_name'] = time().'.'.$file_ext;
+            $config['allowed_types']= 'gif|jpg|png';
+            $config['upload_path'] = $uploadPath;             
+            $this->load->library('upload', $config); 
+            $this->upload->initialize($config); 
+            
+            if($this->upload->do_upload('userfile')){ 
+                $fileData = $this->upload->data(); 
+                //$uploadData['file_name'] = $fileData['file_name']; 
+                //$uploadData['uploaded_on'] = date("Y-m-d H:i:s");    
+				$data = $this->input->post();        
+				$data['ps_image']=base_url().'uploadfiles/'.$fileData['file_name'];
+                $data['ps_datetime']=date('Y-m-d H:i');
+                $data['ps_flag']=1;
+                $data['ps_ip']=$this->input->ip_address();;
+				$this->Globalmodel->savedata('pstation',$data);
+				//$this->response(['PS created successfully.'], REST_Controller::HTTP_OK);  
+                $msg='PS created successfully.';
+				print_r($msg);                
+            }
+            else
+            {
+                $error = $this->upload->display_errors();
+				print_r($error);                                
+            }                         
+        }      
     }
 
     public function index_put($id)
